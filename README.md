@@ -1,2 +1,3 @@
-# pyjaguar
-Biblioteca de análise/manipulação de dados similar ao Pandas
+<p align="center">
+  <img src=https://imgur.com/Vp1FYue.png">
+</p>
