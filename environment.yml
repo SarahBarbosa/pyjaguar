@@ -1,0 +1,17 @@
+name: pyjaguar
+dependencies: 
+  - python=3.10
+  - pip
+
+  # test dependencies
+  - pytest
+
+  # required dependencies
+  - numpy
+
+  # documentation (jupyter notebooks)
+  - jupyter
+
+
+  
+
