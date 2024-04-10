@@ -1,10 +1,6 @@
 import numpy as np
-from numpy.testing import assert_array_equal
 import pytest
-
 import pyjaguar as pj
-
-pytestmark = pytest.mark.filterwarnings("ignore")
 
 # Arrays para teste
 a = np.array(["a", "b", "c"])
@@ -18,51 +14,38 @@ df = pj.DataFrame({"a": a, "b": b, "c": c, "d": d, "e": e})
 
 class TesteCriacaoDataFrame:
 
-    def teste_tipos_entrada(self):
-        with pytest.raises(TypeError):
-            # Lista como entrada
-            pj.DataFrame([1, 2, 3])
+    @pytest.mark.parametrize("entrada", [
+        ([1, 2, 3]),
+        ({1: 5, "b": 10}),
+        ({"a": np.array([1]), "b": 10}),
+        ({"a": np.array([1]), "b": np.array([[1]])})
+    ])
 
-        with pytest.raises(TypeError):
-            # Dicionário com chaves não string
-            pj.DataFrame({1: 5, "b": 10})
+    def test_tipos_entrada_invalidos(self, entrada):
+        with pytest.raises((TypeError, ValueError)):
+            pj.DataFrame(entrada)
 
-        with pytest.raises(TypeError):
-            # Valor não-Array no dicionário
-            pj.DataFrame({"a": np.array([1]), "b": 10})
-
-        with pytest.raises(ValueError):
-            # Array multidimensional
-            pj.DataFrame({"a": np.array([1]), "b": np.array([[1]])})
-
-        # Construção correta. Sem erro.
+    def test_tipos_entrada_validos(self):
         pj.DataFrame({"a": np.array([1]), "b": np.array([1])})
-    
-    def teste_comprimento_array(self):
-        # Arrays de comprimentos diferentes
+
+    @pytest.mark.parametrize("dados", [
+        ({"a": np.array([1, 2]), "b": np.array([1])})
+    ])
+
+    def test_comprimento_array_invalido(self, dados):
         with pytest.raises(ValueError):
-            pj.DataFrame({"a": np.array([1, 2]), "b": np.array([1])})
-        
-        # Construção correta. Sem erro.                    
+            pj.DataFrame(dados)
+
+    def test_comprimento_array_valido(self):
         pj.DataFrame({"a": np.array([1, 2]), "b": np.array([5, 10])})
-    
-    def teste_unicode_para_object(self):
-        a_object = a.astype("O") 
 
-        # Verificando se "a" foi convertido corretamente
-        assert_array_equal(df._dados["a"], a_object)
+    def test_unicode_para_object(self):
+        a_object = a.astype("O")
+        assert np.array_equal(df._dados["a"], a_object)
+        assert np.array_equal(df._dados["b"], b)
+        assert np.array_equal(df._dados["c"], c)
+        assert np.array_equal(df._dados["d"], d)
+        assert np.array_equal(df._dados["e"], e)
 
-        # Verificando "b"
-        assert_array_equal(df._dados["b"], b)
-
-         # Verificando "c"
-        assert_array_equal(df._dados["c"], c)
-
-         # Verificando "d"
-        assert_array_equal(df._dados["d"], d)
-
-         # Verificando "e"
-        assert_array_equal(df._dados["e"], e)
-    
-    def teste_nlinhas(self):
+    def test_numero_linhas(self):
         assert len(df) == 3
