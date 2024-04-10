@@ -24,8 +24,14 @@ class DataFrame:
         """
         # Verifica os tipos de entradas corretos
         self._verificar_entrada(dados)
-    
-    def _verificar_entrada(self, dados):
+
+        # Verifica se os comprimentos dos arrays são iguais
+        self._verificar_comprimento(dados)
+
+        # Converte arrays unicode em object
+        self._dados = self._converter_unicode_para_object(dados)
+
+    def _verificar_entrada(self, dados: Dict[str, np.ndarray]) -> None:
         if not isinstance(dados, dict):
             raise TypeError("`dados` precisa ser um dicionário!")
         
@@ -38,4 +44,22 @@ class DataFrame:
             
             if valor.ndim != 1:
                 raise ValueError("Os valores de `dados` precisam ser um array de uma dimensão!")
-            
+    
+    def _verificar_comprimento(self, dados: Dict[str, np.ndarray]) -> None:
+        comprimentos = set(len(valor) for valor in dados.values())
+        if len(comprimentos) != 1:
+            raise ValueError("Todos arrays precisam ter o mesmo comprimento!")
+    
+    def _converter_unicode_para_object(self, dados: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:
+        novos_dados = {}
+        for chave, valor in dados.items():
+            novos_dados[chave] = valor.astype("object") if valor.dtype.kind == "U" else valor
+        return novos_dados
+    
+    # Implementando o método especial no pyjaguar    
+    def __len__(self) -> int:
+        """
+        Retorna o número de linhas no DataFrame.
+        """
+        return len(next(iter(self._dados.values())))
+    
