@@ -1,6 +1,6 @@
 import numpy as np
-import pytest
 import pyjaguar as pj
+import pytest
 
 # Arrays para teste
 a = np.array(["a", "b", "c"])
@@ -49,3 +49,23 @@ class TesteCriacaoDataFrame:
 
     def test_numero_linhas(self):
         assert len(df) == 3
+    
+    def test_colunas(self):
+        assert df.colunas == ["a", "b", "c", "d", "e"]
+
+    @pytest.mark.parametrize("colunas, esperado_exception", [
+        (5, TypeError),
+        (["a", "b"], ValueError), 
+        ([1, 2, 3, 4, 5], TypeError), 
+        (["f", "f", "g", "h", "i"], ValueError), 
+        (["f", "g", "h", "i", "j"], None),  
+        (["a", "b", "c", "d", "e"], None) 
+    ])
+
+    def test_nome_colunas(self, colunas, esperado_exception):
+        if esperado_exception:
+            with pytest.raises(esperado_exception):
+                df.colunas = colunas
+        else:
+            df.colunas = colunas
+            assert df.colunas == colunas
