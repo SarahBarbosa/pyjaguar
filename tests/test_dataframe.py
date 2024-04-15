@@ -12,6 +12,7 @@ e = np.array([1, 2, 3])
 # DataFrame para teste
 df = pj.DataFrame({"a": a, "b": b, "c": c, "d": d, "e": e})
 
+
 class TesteCriacaoDataFrame:
 
     @pytest.mark.parametrize("entrada", [
@@ -20,7 +21,6 @@ class TesteCriacaoDataFrame:
         ({"a": np.array([1]), "b": 10}),
         ({"a": np.array([1]), "b": np.array([[1]])})
     ])
-
     def test_tipos_entrada_invalidos(self, entrada):
         with pytest.raises((TypeError, ValueError)):
             pj.DataFrame(entrada)
@@ -31,7 +31,6 @@ class TesteCriacaoDataFrame:
     @pytest.mark.parametrize("dados", [
         ({"a": np.array([1, 2]), "b": np.array([1])})
     ])
-
     def test_comprimento_array_invalido(self, dados):
         with pytest.raises(ValueError):
             pj.DataFrame(dados)
@@ -49,19 +48,18 @@ class TesteCriacaoDataFrame:
 
     def test_numero_linhas(self):
         assert len(df) == 3
-    
+
     def test_colunas(self):
         assert df.colunas == ["a", "b", "c", "d", "e"]
 
     @pytest.mark.parametrize("colunas, esperado_exception", [
         (5, TypeError),
-        (["a", "b"], ValueError), 
-        ([1, 2, 3, 4, 5], TypeError), 
-        (["f", "f", "g", "h", "i"], ValueError), 
-        (["f", "g", "h", "i", "j"], None),  
-        (["a", "b", "c", "d", "e"], None) 
+        (["a", "b"], ValueError),
+        ([1, 2, 3, 4, 5], TypeError),
+        (["f", "f", "g", "h", "i"], ValueError),
+        (["f", "g", "h", "i", "j"], None),
+        (["a", "b", "c", "d", "e"], None)
     ])
-
     def test_nome_colunas(self, colunas, esperado_exception):
         if esperado_exception:
             with pytest.raises(esperado_exception):
@@ -69,3 +67,6 @@ class TesteCriacaoDataFrame:
         else:
             df.colunas = colunas
             assert df.colunas == colunas
+    
+    def test_dimensao(self):
+        assert df.dimensao == (3, 5)

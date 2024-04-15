@@ -4,7 +4,11 @@
 
 # Projeto em Construção 🚧
 
-**Nota:** Este projeto está em construção e a documentação fornecida é destinada apenas ao modo de desenvolvedor.
+**Nota:** A documentação fornecida é destinada apenas ao modo de desenvolvedor.
+
+## Acknowledgement
+
+Os fundamentos desta biblioteca foram construídos utilizando as aulas da série "Build a Data Analysis Library from Scratch in Python" disponíveis no [YouTube](https://www.youtube.com/playlist?list=PLVyhfExBT1XDTu-oocI3ttl_OPhulAJOp), ministradas por Ted Petrou. O código-fonte original pode ser encontrado no repositório [GitHub](https://github.com/tdpetrou/pandas_cub), licenciado sob a licença BSD-3-Clause.
 
 # Criar Variável de Ambiente
 
@@ -35,7 +39,7 @@ conda env create -f environment.yml
 conda activate pyjaguar
 ```
 
-# Criar um Kernel Python específico para o Ambiente de Desenvolvimento
+## Criar um Kernel Python específico para o Ambiente de Desenvolvimento
 
 Para usar este ambiente Conda em um notebook Jupyter ou JupyterLab, você pode criar um kernel Python específico:
 
@@ -48,3 +52,11 @@ Você pode verificar se o kernel foi instalado corretamente usando o seguinte co
 ```bash
 jupyter kernelspec list
 ```
+
+# Implementações futuras (TODO)
+
+<input type="checkbox" disabled /> Colapsar colunas quando o seu número for > 10
+
+<input type="checkbox" disabled />Tabelas interativas 
+
+<input type="checkbox" disabled /> Leitura de arquivos FITS
