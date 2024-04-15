@@ -55,8 +55,8 @@ jupyter kernelspec list
 
 # Implementações futuras (TODO)
 
-<input type="checkbox" disabled /> Colapsar colunas quando o seu número for > 10
+- [ ] Colapsar colunas quando o seu número for > 10
 
-<input type="checkbox" disabled />Tabelas interativas 
+- [ ] Tabelas interativas 
 
-<input type="checkbox" disabled /> Leitura de arquivos FITS
+- [ ] Leitura de arquivos FITS
