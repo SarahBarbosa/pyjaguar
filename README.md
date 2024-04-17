@@ -18,11 +18,12 @@ Certifique-se de ter o Anaconda ou Miniconda instalado em seu sistema. Se ainda 
 
 ## Configurando o Ambiente
 
-1. **Clone este repositório:**
+1. **Clone este repositório e instale o pyjaguar:**
 
 ```bash
 git clone https://github.com/SarahBarbosa/pyjaguar
 cd pyjaguar
+pip install -e .
 ```
 
 2. **Crie o Ambiente Conda:**
@@ -60,3 +61,5 @@ jupyter kernelspec list
 - [ ] Tabelas interativas 
 
 - [ ] Leitura de arquivos FITS
+
+- [ ] Plotagem direta e intuitiva e resultados estatísticos

@@ -33,17 +33,17 @@ class DataFrame:
 
     def _verificar_entrada(self, dados: Dict[str, np.ndarray]) -> None:
         if not isinstance(dados, dict):
-            raise TypeError("Você está tentando me confundir? `dados` precisa ser um dicionário!")
+            raise TypeError("Você está tentando me confundir? A entrada deve ser um dicionário!")
 
         for chave, valor in dados.items():
             if not isinstance(chave, str):
-                raise TypeError("Sério? As chaves de `dados` precisam ser strings!")
+                raise TypeError("Sério? As chaves da entrada precisam ser strings!")
 
             if not isinstance(valor, np.ndarray):
-                raise TypeError("Eita! Os valores de `dados` precisam ser NumPy arrays!")
+                raise TypeError("Eita! Os valores do dicionário precisam ser NumPy arrays!")
 
             if valor.ndim != 1:
-                raise ValueError("Oops! Os valores de `dados` devem ser arrays unidimensionais!")
+                raise ValueError("Oops! Os valores do dicionário devem ser arrays unidimensionais!")
 
     def _verificar_comprimento(self, dados: Dict[str, np.ndarray]) -> None:
         comprimentos = set(len(valor) for valor in dados.values())
@@ -92,17 +92,17 @@ class DataFrame:
         None
         """
         if not isinstance(colunas, list):
-            raise TypeError("Oh não! As novas colunas devem estar em uma lista!")
+            raise TypeError("Oh não! Os nomes das novas colunas devem estar em uma lista!")
 
         if len(colunas) != len(self._dados):
-            raise ValueError(f"Ooops! A lista com novas colunas deve ter comprimento igual a {len(self._dados)}!")
+            raise ValueError(f"Ooops! A lista com os nomes das novas colunas deve ter comprimento igual a {len(self._dados)}!")
         else:
             for col in colunas:
                 if not isinstance(col, str):
                     raise TypeError("Oops! Todos os nomes das colunas devem ser strings!")
 
         if len(colunas) != len(set(colunas)):
-            raise ValueError("Parece que suas colunas têm duplicatas. Isso não é permitido!")
+            raise ValueError("Parece que os nomes das suas colunas têm duplicatas. Isso não é permitido!")
 
         self._dados = dict(zip(colunas, self._dados.values()))
     
@@ -141,20 +141,20 @@ class DataFrame:
         Usado para criar uma string HTML para exibir adequadamente o DataFrame
         em um Notebook Jupyter.
         """
-        html = '<table><thead><tr><th></th>'
-        html += ''.join(f"<th class='{col}'>{col:10}</th>" for col in self.colunas)
-        html += '</tr></thead><tbody>'
-
+        html = "<table><thead><tr><th></th>"
+        html += "".join(f"<th class='{col}'>{col:10}</th>" for col in self.colunas)
+        html += "</tr></thead><tbody>"
+        
         num_linhas = min(len(self), 5)
         for i in range(num_linhas):
             html += self._formatar_linha_html(i)
 
         if len(self) > 5:
-            html += f'<tr><td colspan="{len(self.colunas) + 1}">...</td></tr>'
+            html += f"<tr><td colspan='{len(self.colunas) + 1}'>...</td></tr>"
             for i in range(len(self) - 5, len(self)):
                 html += self._formatar_linha_html(i)
 
-        html += '</tbody></table>'
+        html += "</tbody></table>"
         return html
     
     
