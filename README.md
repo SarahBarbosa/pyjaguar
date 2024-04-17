@@ -56,10 +56,16 @@ jupyter kernelspec list
 
 # Implementações futuras (TODO)
 
-- [ ] Colapsar colunas quando o seu número for > 10
-
-- [ ] Tabelas interativas 
-
-- [ ] Leitura de arquivos FITS
-
-- [ ] Plotagem direta e intuitiva e resultados estatísticos
+- [ ] Colapsar colunas automaticamente quando o número de colunas exceder 10.
+  
+- [ ] Aprimorar a manipulação de dados temporais, incluindo suporte para fusos horários, resampling avançado e operações de séries temporais.
+  
+- [ ] Adicionar suporte para dados geoespaciais, permitindo operações como cálculos de distância, manipulação de geometrias e análise espacial diretamente nos DataFrames.
+  
+- [ ] Integrar funcionalidades avançadas para facilitar a análise de dados, incluindo técnicas de feature engineering para preparação de dados para aprendizado de máquina e análise estatística.
+  
+- [ ] Desenvolver tabelas interativas para uma exploração mais intuitiva e interativa dos dados, possibilitando filtragem dinâmica, ordenação e visualização personalizada.
+  
+- [ ] Implementar a capacidade de leitura de arquivos FITS.
+  
+- [ ] Aprimorar a plotagem direta e intuitiva, fornecendo recursos estatísticos integrados para uma análise mais completa e visualização eficaz dos dados.

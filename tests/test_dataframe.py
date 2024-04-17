@@ -70,3 +70,7 @@ class TesteCriacaoDataFrame:
     
     def test_dimensao(self):
         assert df.dimensao == (3, 5)
+
+    def test_para_numpy(self):
+        valores = np.column_stack((a, b, c, d, e))
+        assert np.array_equal(df.para_numpy, valores)
