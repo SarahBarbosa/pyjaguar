@@ -1,14 +1,12 @@
 from typing import Dict, List, Tuple
+from collections import OrderedDict
 import numpy as np
 
 
 class DataFrame:
     def __init__(self, dados: Dict[str, np.ndarray]) -> None:
         """
-        Inicializa um DataFrame contendo dados heterogêneos bidimensionais.
-
-        Para criar um DataFrame, passe um dicionário de NumPy arrays para o
-        parâmetro "dados", onde as chaves representam os nomes das colunas.
+        Inicializa um DataFrame.
 
         Parâmetros
         ----------
@@ -51,8 +49,6 @@ class DataFrame:
                 dados[chave] = valor.astype("object")
         return dados
     
-    # ----------------------------------------------------------------------
-
     def __len__(self) -> int:
         """
         Retorna o número de linhas no DataFrame.
@@ -110,21 +106,7 @@ class DataFrame:
         """
         return len(self), len(self._dados)
         
-    def _formatar_linha_html(self, indice: int) -> str:
-        """
-        Formata uma linha do DataFrame em HTML.
-        """
-        linha_html = f"<tr><td><strong>{indice}</strong></td>"
-        for _, valores in self._dados.items():
-            tipo = valores.dtype.kind
-            if tipo == "f":
-                linha_html += f"<td>{valores[indice]:.2f}</td>"
-            else:
-                linha_html += f"<td>{valores[indice]}</td>"
-        linha_html += "</tr>"
-        return linha_html
-
-    def _repr_html_(self) -> str | None:
+    def _repr_html_(self) -> str:
         """
         Usado para criar uma string HTML para exibir adequadamente o DataFrame
         em um Notebook Jupyter.
@@ -132,19 +114,31 @@ class DataFrame:
         html = "<table><thead><tr><th></th>"
         html += "".join(f"<th>{col:10}</th>" for col in self.colunas)
         html += "</tr></thead><tbody>"
-        
-        num_linhas = min(len(self), 5)
-        for i in range(num_linhas):
-            html += self._formatar_linha_html(i)
 
-        if len(self) > 5:
-            html += f"<tr><td colspan='{len(self.colunas) + 1}'>...</td></tr>"
-            for i in range(len(self) - 5, len(self)):
-                html += self._formatar_linha_html(i)
+        num_linhas = min(10, len(self))
+        for i in range(num_linhas):
+            html += f"<tr><td><strong>{i}</strong></td>"
+            for values in self._dados.values():
+                if values.dtype.kind == "f":
+                    html += f"<td>{values[i]:.2f}</td>"
+                else:
+                    html += f"<td>{values[i]}</td>"
+            html += "</tr>"
+
+        if len(self) > 10:
+            html += f"<tr><td colspan='{len(self.colunas) + 1}'><strong>...</strong></td></tr>"
+            for i in range(-5, 0):
+                html += f"<tr><td><strong>{len(self) + i}</strong></td>"
+                for values in self._dados.values():
+                    if values.dtype.kind == "f":
+                        html += f"<td>{values[i]:.2f}</td>"
+                    else:
+                        html += f"<td>{values[i]}</td>"
+                html += "</tr>"
 
         html += "</tbody></table>"
         return html
-    
+        
     @property
     def para_numpy(self) -> np.ndarray:
         """
@@ -164,6 +158,36 @@ class DataFrame:
                [3, 'z']], dtype=object)
         """
         return np.column_stack(list(self._dados.values()))
+    
+    @property
+    def tipos_dados(self) -> 'DataFrame':
+        """
+        Retorna os tipos de dados no DataFrame.
+
+        Isso retorna um DataFrame de duas colunas, uma com os nomes originais 
+        das colunas do DataFrame e outra com os tipos de dados correspondentes. 
+        Colunas com tipos mistos são armazenadas com o tipo ``object``.
+
+        Retorna
+        -------
+        pyjaguar.DataFrame
+            Um DataFrame com duas colunas: 'Coluna' contendo os nomes das colunas 
+            originais do DataFrame e 'Tipo' contendo os tipos de dados correspondentes.
+
+        Exemplos
+        --------
+        >>> dados = {"A": np.array([1, 2, 3]), "B": np.array(["x", "y", "z"])}
+        >>> df.tipos_dados
+            Coluna      Tipo
+        0        A     int64
+        1        B    object
+        """
+        tipos_dados = np.array([valor.dtype for valor in self._dados.values()])
+        col_nomes = np.array(list(self._dados.keys()))
+        novos_dados = {"Coluna": col_nomes, "Tipo": tipos_dados}
+        return DataFrame(novos_dados)
+
+
 
         
 
