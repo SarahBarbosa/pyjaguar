@@ -1,9 +1,6 @@
 import numpy as np
 import pyjaguar as pj
-
 import pytest
-from tests import assert_igual_df
-
 
 # Arrays para teste
 a = np.array(["a", "b", "c"])
@@ -85,6 +82,5 @@ class TesteCriacaoDataFrame:
         df_esperado = df.tipos_dados
         df_resposta = pj.DataFrame({"Coluna": colunas_esperadas, "Tipo": tipos_esperados})
 
-        assert np.array_equal(df_esperado._dados['Coluna'], df_resposta._dados['Coluna'])
-        assert np.array_equal(df_esperado._dados['Tipo'], df_resposta._dados['Tipo'])
-
+        assert np.array_equal(df_esperado._dados["Coluna"], df_resposta._dados["Coluna"])
+        assert np.array_equal(df_esperado._dados["Tipo"], df_resposta._dados["Tipo"])

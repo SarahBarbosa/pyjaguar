@@ -1,5 +1,4 @@
-from typing import Dict, List, Tuple
-from collections import OrderedDict
+from typing import Dict, List, Tuple, Union
 import numpy as np
 
 
@@ -177,6 +176,7 @@ class DataFrame:
         Exemplos
         --------
         >>> dados = {"A": np.array([1, 2, 3]), "B": np.array(["x", "y", "z"])}
+        >>> df = pj.DataFrame(dados)
         >>> df.tipos_dados
             Coluna      Tipo
         0        A     int64
@@ -186,6 +186,70 @@ class DataFrame:
         col_nomes = np.array(list(self._dados.keys()))
         novos_dados = {"Coluna": col_nomes, "Tipo": tipos_dados}
         return DataFrame(novos_dados)
+    
+
+    def __getitem__(self, item: Union[int, slice, str, list, 'DataFrame']) -> 'DataFrame':
+        """
+        Use o operador de colchetes para selecionar linhas e colunas simultaneamente.
+
+        Parâmetros
+        ----------
+        item : int, slice, str, list, DataFrame booleano
+            A chave de indexação.
+
+        Retorna
+        -------
+        pj.DataFrame
+            Um subconjunto do DataFrame original.
+
+        Exemplos
+        --------
+        >>> dados = {"A": np.array([1, 2, 3, 4]), "B": np.array(["a", "b", "c", "d"]), 
+        ...          "C": np.array([True, False, True, False])}
+        >>> df = pj.DataFrame(dados)
+        >>> # Seleciona uma coluna
+        >>> df["A"]
+            A
+        0   1
+        1   2
+        2   3
+        3   4
+        >>> # Seleciona múltiplas colunas
+        >>> df[["A", "B"]]
+            A   B
+        0   1   a
+        1   2   b
+        2   3   c
+        3   4   d
+        >>> # Filtra linhas com base em um DataFrame de booleanos
+        >>> df[df["C"]]
+            A   B     C
+        0   1   a  True
+        1   3   c  True
+        >>> # Seleciona linhas e colunas simultaneamente
+        >>> df[linhas, colunas]
+        """
+        if isinstance(item, str):
+            return DataFrame({item: self._dados[item]})
+        
+        if isinstance(item, list):
+            return DataFrame({col: self._dados[col] for col in item})
+        
+        if isinstance(item, DataFrame):
+            if item.dimensao[1] != 1:
+                raise ValueError("O DataFrame booleano deve ter apenas uma coluna.")
+            
+            arr = next(iter(item._dados.values()))
+
+            if arr.dtype.kind != "b":
+                raise ValueError("Os valores do DataFrame devem ser do tipo booleano.")
+            
+            novos_dados = {col: valor[arr] for col, valor in self._dados.items()}            
+            return DataFrame(novos_dados)
+
+
+    
+
 
 
 
