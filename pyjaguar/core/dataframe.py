@@ -226,8 +226,6 @@ class DataFrame:
             A   B     C
         0   1   a  True
         1   3   c  True
-        >>> # Seleciona linhas e colunas simultaneamente
-        >>> df[linhas, colunas]
         """
         if isinstance(item, str):
             return DataFrame({item: self._dados[item]})
@@ -246,6 +244,27 @@ class DataFrame:
             
             novos_dados = {col: valor[arr] for col, valor in self._dados.items()}            
             return DataFrame(novos_dados)
+        
+        if isinstance(item, tuple):
+            return self._getitem_tuple(item)
+        
+        raise TypeError("Você deve passar uma string, lista, DataFrame ou uma tupla"
+                        "para o operador de seleção.")
+        
+    
+    def _getitem_tuple(self, item):
+        """
+        Seleção simultânea de linhas e colunas.
+        """
+        if len(item) != 2:
+            raise ValueError("A tupla deve ter tamanho 2.")
+        
+
+
+
+
+
+
 
 
     
