@@ -190,7 +190,7 @@ class DataFrame:
 
     def __getitem__(self, item: Union[int, slice, str, list, 'DataFrame']) -> 'DataFrame':
         """
-        Use o operador de colchetes para selecionar linhas e colunas simultaneamente.
+        Use o operador de colchetes para selecionar linhas e colunas.
 
         Parâmetros
         ----------
@@ -226,51 +226,75 @@ class DataFrame:
             A   B     C
         0   1   a  True
         1   3   c  True
+        >>> # Seleciona uma linha e uma coluna simultâneamente
+        >>> df[1, 2]
+                C
+        0   False
         """
         if isinstance(item, str):
-            return DataFrame({item: self._dados[item]})
+            return self._selecionar_coluna(item)
         
         if isinstance(item, list):
-            return DataFrame({col: self._dados[col] for col in item})
+            return self._selecionar_colunas(item)
         
         if isinstance(item, DataFrame):
-            if item.dimensao[1] != 1:
-                raise ValueError("O DataFrame booleano deve ter apenas uma coluna.")
-            
-            arr = next(iter(item._dados.values()))
-
-            if arr.dtype.kind != "b":
-                raise ValueError("Os valores do DataFrame devem ser do tipo booleano.")
-            
-            novos_dados = {col: valor[arr] for col, valor in self._dados.items()}            
-            return DataFrame(novos_dados)
+            return self._filtrar_linhas(item)
         
         if isinstance(item, tuple):
-            return self._getitem_tuple(item)
+            return self._selecionar_linhas_e_colunas(item)
         
-        raise TypeError("Você deve passar uma string, lista, DataFrame ou uma tupla"
+        raise TypeError("Você deve passar uma string, lista, DataFrame ou uma tupla "
                         "para o operador de seleção.")
-        
-    
-    def _getitem_tuple(self, item):
+
+    def _selecionar_coluna(self, coluna: str) -> 'DataFrame':
         """
-        Seleção simultânea de linhas e colunas.
+        Seleciona uma coluna do DataFrame.
+        """
+        return DataFrame({coluna: self._dados[coluna]})
+
+    def _selecionar_colunas(self, colunas: list) -> 'DataFrame':
+        """
+        Seleciona múltiplas colunas do DataFrame.
+        """
+        return DataFrame({col: self._dados[col] for col in colunas})
+
+    def _filtrar_linhas(self, dataframe_booleano: 'DataFrame') -> 'DataFrame':
+        """
+        Filtra as linhas do DataFrame com base em outro DataFrame booleano.
+        """
+        if dataframe_booleano.dimensao[1] != 1:
+            raise ValueError("O DataFrame booleano deve ter apenas uma coluna.")
+        
+        arr_bool = next(iter(dataframe_booleano._dados.values()))
+
+        if arr_bool.dtype.kind != "b":
+            raise ValueError("Os valores do DataFrame devem ser do tipo booleano.")
+        
+        novos_dados = {col: valor[arr_bool] for col, valor in self._dados.items()}            
+        return DataFrame(novos_dados)
+
+    def _selecionar_linhas_e_colunas(self, item) -> 'DataFrame':
+        """
+        Seleciona simultaneamente linhas e colunas do DataFrame.
         """
         if len(item) != 2:
             raise ValueError("A tupla deve ter tamanho 2.")
-        
+
+        selecao_linha, selecao_col = item
+
+        if isinstance(selecao_linha, int):
+            selecao_linha = [selecao_linha]
+
+        if isinstance(selecao_col, int):
+            selecao_col = [self.colunas[selecao_col]]
+        elif isinstance(selecao_col, str):
+            selecao_col = [selecao_col]
+
+        novos_dados = {col: self._dados[col][selecao_linha] for col in selecao_col}
+
+        return DataFrame(novos_dados)
+            
+                  
 
 
-
-
-
-
-
-
-    
-
-
-
-
-        
 

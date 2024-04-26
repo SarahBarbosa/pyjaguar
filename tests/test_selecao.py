@@ -34,32 +34,34 @@ class TestSelecao:
     def test_booleano_simples(self):
         # Testa a seleção usando um array booleano
         bool_arr = np.array([True, False, False])
-        df_bool = pj.DataFrame({'col': bool_arr})       
+        df_bool = pj.DataFrame({"col": bool_arr})       
 
         df_esperado = df[df_bool]                      
-        df_resposta = pj.DataFrame({'a': a[bool_arr], 'b': b[bool_arr], 
-                                    'c': c[bool_arr], 'd': d[bool_arr], 
-                                    'e': e[bool_arr]}) 
+        df_resposta = pj.DataFrame({"a": a[bool_arr], "b": b[bool_arr], 
+                                    "c": c[bool_arr], "d": d[bool_arr], 
+                                    "e": e[bool_arr]}) 
         
-        assert np.array_equal(df_esperado._dados["a"], df_resposta._dados["a"])
-        assert np.array_equal(df_esperado._dados["b"], df_resposta._dados["b"])
-        assert np.array_equal(df_esperado._dados["c"], df_resposta._dados["c"])
-        assert np.array_equal(df_esperado._dados["d"], df_resposta._dados["d"])
-        assert np.array_equal(df_esperado._dados["e"], df_resposta._dados["e"])
+        assert np.array_equal(df_esperado._dados, df_resposta._dados)
 
         # Testa se uma exceção é levantada quando o DataFrame booleano possui mais de uma coluna
         with pytest.raises(ValueError):
-            df_bool = pj.DataFrame({'col': bool_arr, 'col2': bool_arr})
+            df_bool = pj.DataFrame({"col": bool_arr, "col2": bool_arr})
             df[df_bool]
 
         # Testa se uma exceção é levantada quando o DataFrame booleano possui tipos de dados inválidos
         with pytest.raises(TypeError):
-            df_bool = pj.DataFrame({'col': np.array[1, 2, 3]})
+            df_bool = pj.DataFrame({"col": np.array[1, 2, 3]})
     
     def test_tupla_simultanea(self):
         # Testa se exceções são levantadas ao usar uma tupla vazia ou múltiplos elementos como índice
         with pytest.raises(TypeError):
             df[set()]
-        
         with pytest.raises(ValueError):
             df[(1, 2, 3)]
+    
+    def test_elemento_unico(self):     
+        # Testa se a seleção de um único elemento retorna o resultado esperado      
+        df_esperado = df[1, "e"]
+        df_resposta = pj.DataFrame({"e": np.array([2])})
+
+        assert np.array_equal(df_esperado._dados, df_resposta._dados)
