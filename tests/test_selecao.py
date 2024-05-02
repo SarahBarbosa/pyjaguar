@@ -17,8 +17,8 @@ class TestSelecao:
 
     def test_uma_coluna(self):
         # Testa a seleção de uma única coluna
-        assert np.array_equal(df["a"].para_numpy[:, 0], a)  
-        assert np.array_equal(df["c"].para_numpy[:, 0], c) 
+        assert np.array_equal(df["a"].para_array[:, 0], a)  
+        assert np.array_equal(df["c"].para_array[:, 0], c) 
     
     def test_multiplas_colunas(self):
         # Testa a seleção de múltiplas colunas
@@ -65,3 +65,22 @@ class TestSelecao:
         df_resposta = pj.DataFrame({"e": np.array([2])})
 
         assert np.array_equal(df_esperado._dados, df_resposta._dados)
+    
+    def test_todas_selecoes_linha(self):
+        df1 = pj.DataFrame({"a": np.array([True, False, True]), "b": np.array([1, 3, 5])})
+        
+        with pytest.raises(ValueError):
+            df[df1, "e"]
+        with pytest.raises(TypeError):
+            df[df1["b"], "c"]
+
+        df_esperado = df[df1["a"], "c"]
+        df_resposta = pj.DataFrame({"c": c[[True, False, True]]})
+        assert np.array_equal(df_esperado._dados["c"], df_resposta._dados["c"])
+
+        df_esperado = df[[1, 2], 0]
+        df_resposta = pj.DataFrame({"a": a[[1, 2]]})
+        assert np.array_equal(df_esperado._dados["a"], df_resposta._dados["a"])
+
+        df_esperado = df[1:, 0]
+        assert np.array_equal(df_esperado._dados["a"], df_resposta._dados["a"])

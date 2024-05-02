@@ -139,7 +139,7 @@ class DataFrame:
         return html
         
     @property
-    def para_numpy(self) -> np.ndarray:
+    def para_array(self) -> np.ndarray:
         """
         Converte o DataFrame para um NumPy array.
 
@@ -151,7 +151,7 @@ class DataFrame:
         -------
         >>> dados = {"A": np.array([1, 2, 3]), "B": np.array(["x", "y", "z"])}
         >>> df = pj.DataFrame(dados)
-        >>> df.para_numpy
+        >>> df.para_array
         array([[1, 'x'],
                [2, 'y'],
                [3, 'z']], dtype=object)
@@ -226,10 +226,14 @@ class DataFrame:
             A   B     C
         0   1   a  True
         1   3   c  True
-        >>> # Seleciona uma linha e uma coluna simultâneamente
+        >>> # Seleciona uma linha e uma coluna simultaneamente
         >>> df[1, 2]
                 C
         0   False
+        >>> df[[0, 1], 2]
+                C
+        0    True
+        1   False
         """
         if isinstance(item, str):
             return self._selecionar_coluna(item)
@@ -284,6 +288,17 @@ class DataFrame:
 
         if isinstance(selecao_linha, int):
             selecao_linha = [selecao_linha]
+        elif isinstance(selecao_linha, DataFrame):
+            if selecao_linha.dimensao[1] != 1:
+                raise ValueError("O DataFrame de seleção de linha deve ter apenas uma coluna.")
+            
+            selecao_linha = next(iter(selecao_linha._dados.values()))
+
+            if selecao_linha.dtype.kind != "b":
+                raise TypeError("O DataFrame de seleção de linha deve ser um booleano.")
+
+        elif not isinstance(selecao_linha, (list, slice)):
+            raise TypeError("O DataFrame de seleção de linha deve ser um inteiro, slice ou um DataFrame.")                        
 
         if isinstance(selecao_col, int):
             selecao_col = [self.colunas[selecao_col]]
@@ -293,8 +308,3 @@ class DataFrame:
         novos_dados = {col: self._dados[col][selecao_linha] for col in selecao_col}
 
         return DataFrame(novos_dados)
-            
-                  
-
-
-

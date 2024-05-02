@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="pyjaguar", 
-    version = "0.0.1",
+    version = "1.0.0",
     description = "Biblioteca de análise/manipulação de dados ",
     long_description = "README.md",
     author = "Sarah G. A. Barbosa",

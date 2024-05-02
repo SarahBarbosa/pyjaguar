@@ -80,10 +80,10 @@ class TesteCriacaoDataFrame:
         # Testa as dimensões do DataFrame.
         assert df.dimensao == (3, 5)
 
-    def test_para_numpy(self):
+    def test_para_array(self):
         # Testa a conversão do DataFrame para numpy.
         valores = np.column_stack((a, b, c, d, e))
-        assert np.array_equal(df.para_numpy, valores)
+        assert np.array_equal(df.para_array, valores)
 
     def test_tipos_dados(self):
         # Testa os tipos de dados das colunas do DataFrame.

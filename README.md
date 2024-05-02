@@ -57,6 +57,8 @@ jupyter kernelspec list
 # Implementações futuras (TODO)
 
 - [ ] Colapsar colunas automaticamente quando o número de colunas exceder 10.
+
+- [ ] Adicionar datasets baixáveis. 
   
 - [ ] Aprimorar a manipulação de dados temporais, incluindo suporte para fusos horários, resampling avançado e operações de séries temporais.
   
