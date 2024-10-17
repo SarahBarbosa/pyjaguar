@@ -304,7 +304,17 @@ class DataFrame:
             selecao_col = [self.colunas[selecao_col]]
         elif isinstance(selecao_col, str):
             selecao_col = [selecao_col]
+        elif isinstance(selecao_col, list):
+            nova_selecao_col = []
+            for col in selecao_col:
+                if isinstance(col, int):
+                    nova_selecao_col.append(self.colunas[col])
+                else:
+                    # Isso assume que col é uma string
+                    nova_selecao_col.append(col)
+            selecao_col = nova_selecao_col            
 
         novos_dados = {col: self._dados[col][selecao_linha] for col in selecao_col}
 
         return DataFrame(novos_dados)
+    

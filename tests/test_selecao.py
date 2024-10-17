@@ -30,7 +30,6 @@ class TestSelecao:
         assert np.array_equal(df_esperado._dados["a"], df_resposta._dados["a"])
         assert np.array_equal(df_esperado._dados["b"], df_resposta._dados["b"])
     
-   
     def test_booleano_simples(self):
         # Testa a seleção usando um array booleano
         bool_arr = np.array([True, False, False])
@@ -84,3 +83,34 @@ class TestSelecao:
 
         df_esperado = df[1:, 0]
         assert np.array_equal(df_esperado._dados["a"], df_resposta._dados["a"])
+
+    def test_lista_colunas(self):
+        df_resposta = pj.DataFrame({"c": c, "e": e})
+        
+        df_esperado = df[:, [2, 4]]
+        assert np.array_equal(df_esperado._dados["c"], df_resposta._dados["c"])
+        assert np.array_equal(df_esperado._dados["e"], df_resposta._dados["e"])
+        
+        df_esperado = df[:, [2, "e"]]
+        assert np.array_equal(df_esperado._dados["c"], df_resposta._dados["c"])
+        assert np.array_equal(df_esperado._dados["e"], df_resposta._dados["e"])
+        
+        df_esperado = df[:, ["c", "e"]]
+        assert np.array_equal(df_esperado._dados["c"], df_resposta._dados["c"])
+        assert np.array_equal(df_esperado._dados["e"], df_resposta._dados["e"])
+
+        df_esperado = df[2, ["a", "e"]]
+        df_resposta = pj.DataFrame({"a": a[[2]], "e": e[[2]]})
+        assert np.array_equal(df_esperado._dados["a"], df_resposta._dados["a"])
+        assert np.array_equal(df_esperado._dados["e"], df_resposta._dados["e"])
+
+        df_resposta = pj.DataFrame({"c": c[[1, 2]], "e": e[[1, 2]]})
+        df_esperado = df[[1, 2], ["c", "e"]]
+        assert np.array_equal(df_esperado._dados["c"], df_resposta._dados["c"])
+        assert np.array_equal(df_esperado._dados["e"], df_resposta._dados["e"])
+
+        df1 = pj.DataFrame({"a": np.array([True, False, True]), "b": np.array([1, 3, 5])})
+        df_resposta = pj.DataFrame({"c": c[[0, 2]], "e": e[[0, 2]]})
+        df_esperado = df[df1["a"], ["c", "e"]]
+        assert np.array_equal(df_esperado._dados["c"], df_resposta._dados["c"])
+        assert np.array_equal(df_esperado._dados["e"], df_resposta._dados["e"])
